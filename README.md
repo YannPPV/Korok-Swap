@@ -38,6 +38,44 @@ Web app communautaire pour les joueurs de **The Legend of Zelda : Breath of the 
 - **Catalogue d'abord** : les items de BOTW et TOTK sont fusionnés en une seule entrée quand ils sont communs aux deux jeux.
 - **Échange hors de l'app** : l'échange se déroule dans l'app Nintendo et sur Discord, Korok Swap ne gère pas l'échange lui-même.
 
+## Données du catalogue
+
+### Source des données
+
+- **API** : [Hyrule Compendium API](https://gadhagod.github.io/Hyrule-Compendium-API/) (gadhagod).
+- **Endpoint** : `https://api.hyrule-compendium.com/v3/compendium/all?game=botw` (et `game=totk`).
+- **Licence** : à vérifier avant toute mise en ligne publique. Les images pointent vers l'API.
+
+### Régénérer les données
+
+Depuis la racine du projet :
+
+```bash
+npx tsx scripts/fetch-items.mts
+```
+
+Le script [scripts/fetch-items.mts](scripts/fetch-items.mts) produit `front/src/data/botw.json` et `front/src/data/totk.json`.
+
+> ⚠️ Les fichiers sont écrasés à chaque lancement.
+
+### Contenu des fichiers
+
+Un fichier par jeu, sans fusion : 389 items pour BOTW et 509 pour TOTK, à la date de récupération.
+
+**Champs communs** : `id`, `name`, `description`, `image`, `dlc`, `common_locations`, `category`, plus les deux booléens `botw` et `totk`.
+
+**Les 5 catégories** et leurs champs propres :
+
+| Catégorie | Champs propres |
+| --- | --- |
+| `materials` | `cooking_effect`, `hearts_recovered`, `fuse_attack_power` (TOTK uniquement) |
+| `monsters` | `drops` |
+| `creatures` | `edible`, `drops`, `cooking_effect`, `hearts_recovered` |
+| `equipment` | `properties` (`attack`, `defense`, et `effect`, `type` en TOTK uniquement) |
+| `treasure` | `drops` |
+
+Les types TypeScript sont définis dans [front/src/types/items.ts](front/src/types/items.ts).
+
 ## Sécurité et confiance
 
 Scanner un QR code Zelda Notes donne accès à la boîte d'objets Nintendo de son propriétaire, jusqu'à ce qu'il révoque l'accès. Les retraits sont irréversibles, et il n'existe qu'une seule boîte par joueur. Les risques identifiés sont les faux QR codes et les fausses plaintes. Un avertissement clair devra être affiché dans l'app.
