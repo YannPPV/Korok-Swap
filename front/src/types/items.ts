@@ -44,3 +44,7 @@ export type Creature = Base & {
 
 export type ApiItem = Material | Monster | Treasure | Equipment | Creature
 export type Item = ApiItem & { botw: boolean; totk: boolean }
+
+export type ItemCardProps = {
+  item: Item
+}
